@@ -1,0 +1,14 @@
+domain: liuyao.me
+multigroup: true
+repo: github.com/yaoliu/kubebuilder-lab
+resources:
+- group: webapp
+  kind: Guestbook
+  version: v1
+- group: batch
+  kind: CronJob
+  version: v1
+- group: batch
+  kind: Job
+  version: v1
+version: "2"
