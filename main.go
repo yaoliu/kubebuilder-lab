@@ -28,8 +28,10 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
+	appsv1 "github.com/yaoliu/kubebuilder-lab/apis/apps/v1"
 	batchv1 "github.com/yaoliu/kubebuilder-lab/apis/batch/v1"
 	webappv1 "github.com/yaoliu/kubebuilder-lab/apis/webapp/v1"
+	appscontroller "github.com/yaoliu/kubebuilder-lab/controllers/apps"
 	batchcontroller "github.com/yaoliu/kubebuilder-lab/controllers/batch"
 	// +kubebuilder:scaffold:imports
 )
@@ -44,6 +46,7 @@ func init() {
 
 	_ = webappv1.AddToScheme(scheme)
 	_ = batchv1.AddToScheme(scheme)
+	_ = appsv1.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -87,9 +90,10 @@ func main() {
 		os.Exit(1)
 	}
 	if err = (&batchcontroller.JobReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("Job"),
-		Scheme: mgr.GetScheme(),
+		Client:   mgr.GetClient(),
+		Log:      ctrl.Log.WithName("controllers").WithName("Job"),
+		Scheme:   mgr.GetScheme(),
+		Recorder: mgr.GetEventRecorderFor("job-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Job")
 		os.Exit(1)
@@ -102,6 +106,22 @@ func main() {
 		}
 	}
 
+	if err = (&appscontroller.ReplicaSetReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("ReplicaSet"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ReplicaSet")
+		os.Exit(1)
+	}
+	if err = (&appscontroller.ReplicaSetReconciler{
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("ReplicaSet"),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "ReplicaSet")
+		os.Exit(1)
+	}
 	// +kubebuilder:scaffold:builder
 
 	setupLog.Info("starting manager")

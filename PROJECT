@@ -11,4 +11,7 @@ resources:
 - group: batch
   kind: Job
   version: v1
+- group: apps
+  kind: ReplicaSet
+  version: v1
 version: "2"

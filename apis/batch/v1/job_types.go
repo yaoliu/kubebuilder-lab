@@ -56,6 +56,22 @@ type JobStatus struct {
 	// +patchMergeKey=type
 	// +patchStrategy=merge
 	Conditions []JobCondition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+	// +optional
+	StartTime *metav1.Time `json:"startTime,omitempty" protobuf:"bytes,2,opt,name=startTime"`
+	// +optional
+	CompletionTime *metav1.Time `json:"completionTime,omitempty" protobuf:"bytes,3,opt,name=completionTime"`
+
+	// The number of actively running pods.
+	// +optional
+	Active int32 `json:"active,omitempty" protobuf:"varint,4,opt,name=active"`
+
+	// The number of pods which reached phase Succeeded.
+	// +optional
+	Succeeded int32 `json:"succeeded,omitempty" protobuf:"varint,5,opt,name=succeeded"`
+
+	// The number of pods which reached phase Failed.
+	// +optional
+	Failed int32 `json:"failed,omitempty" protobuf:"varint,6,opt,name=failed"`
 }
 
 type JobConditionType string
@@ -89,7 +105,8 @@ type JobCondition struct {
 }
 
 // +kubebuilder:object:root=true
-
+// +kubebuilder:subresource:status
+// +kubebuilder:resource:shortName=njob
 // Job is the Schema for the jobs API
 type Job struct {
 	metav1.TypeMeta   `json:",inline"`

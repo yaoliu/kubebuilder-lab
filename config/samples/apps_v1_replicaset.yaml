@@ -1,0 +1,7 @@
+apiVersion: apps.liuyao.me/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset-sample
+spec:
+  # Add fields here
+  foo: bar
